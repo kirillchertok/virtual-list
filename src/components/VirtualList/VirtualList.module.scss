@@ -1,0 +1,18 @@
+@use '../../assets/styles/variables.scss' as vars;
+
+.container {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.spacer {
+    height: calc(10000 * #{vars.$row-height});
+    position: relative;
+}
+
+.window {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}

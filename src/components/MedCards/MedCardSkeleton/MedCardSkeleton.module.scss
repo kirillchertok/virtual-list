@@ -1,0 +1,43 @@
+@use '../../../assets/styles/variables.scss' as vars;
+
+.skeleton {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr;
+    height: vars.$row-height;
+    padding: 0 16px;
+    align-items: center;
+    background: vars.$bg-row;
+    border-bottom: 1px solid vars.$border-color;
+}
+
+.shimmer {
+    position: relative;
+    height: 30px;
+    width: 100%;
+    max-width: 70%;
+    border-radius: 4px;
+    overflow: hidden;
+
+    background: #1c2038;
+}
+
+.small {
+    max-width: 40%;
+}
+
+.shimmer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
+
+    animation: shimmer 1.2s linear infinite;
+}
+
+@keyframes shimmer {
+    100% {
+        transform: translateX(100%);
+    }
+}
