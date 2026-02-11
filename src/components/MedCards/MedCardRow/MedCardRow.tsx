@@ -2,11 +2,11 @@ import type { IMedCard } from '@/types/IMedCard';
 
 import styles from './MedCardRow.module.scss';
 
-interface Props {
+interface MedCardRowProps {
     data: IMedCard;
 }
 
-export const MedCardRow = ({ data }: Props) => {
+export const MedCardRow = ({ data }: MedCardRowProps) => {
     return (
         <div className={styles.row}>
             <div className={styles.cell}>{data.patient}</div>

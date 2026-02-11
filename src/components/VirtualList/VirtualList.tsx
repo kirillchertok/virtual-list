@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { fetchMedCards } from '@/api/mockApi';
 import { TOTAL_COUNT } from '@/constants/api';
 import { BUFFER, ROW_HEIGHT } from '@/constants/virtualisation';
+import { useVirtualScrollObserver } from '@/hooks/useVirtualScrollObserverProps';
 import type { IMedCard } from '@/types/IMedCard';
 
 import { MedCardRow } from '../MedCards/MedCardRow/MedCardRow';
@@ -32,41 +33,6 @@ export const VirtualList = () => {
         });
     }, [visibleCount]);
 
-    useEffect(() => {
-        if (!listRef.current) return;
-
-        const observer = new IntersectionObserver(
-            entries => {
-                entries.forEach(entry => {
-                    if (!entry.isIntersecting || loadingRef.current) return;
-
-                    if (entry.target === bottomTriggerRef.current && endIndex < TOTAL_COUNT) {
-                        loadDown();
-                    }
-
-                    if (entry.target === topTriggerRef.current && startIndex > 0) {
-                        loadUp();
-                    }
-                });
-            },
-            {
-                root: listRef.current,
-                rootMargin: '100px',
-                threshold: 0,
-            }
-        );
-
-        if (topTriggerRef.current) {
-            observer.observe(topTriggerRef.current);
-        }
-
-        if (bottomTriggerRef.current) {
-            observer.observe(bottomTriggerRef.current);
-        }
-
-        return () => observer.disconnect();
-    }, [startIndex, endIndex]);
-
     const loadDown = () => {
         loadingRef.current = true;
         setLoading(true);
@@ -94,6 +60,17 @@ export const VirtualList = () => {
             loadingRef.current = false;
         });
     };
+
+    useVirtualScrollObserver({
+        rootRef: listRef,
+        topRef: topTriggerRef,
+        bottomRef: bottomTriggerRef,
+        canLoadUp: startIndex > 0,
+        canLoadDown: endIndex < TOTAL_COUNT,
+        onLoadUp: loadUp,
+        onLoadDown: loadDown,
+        loadingRef,
+    });
 
     const topSpacerHeight = startIndex * ROW_HEIGHT;
     const bottomSpacerHeight = (TOTAL_COUNT - endIndex) * ROW_HEIGHT;
